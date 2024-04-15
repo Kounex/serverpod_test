@@ -49,7 +49,7 @@ jobs:
 
       - name: Set release version
         run: |
-          VER=$(cat ./${{ github.repository }}_server/pubspec.yaml | grep "version:" | cut -f 2 -d ":" | xargs)
+          VER=$(cat ./${{ github.event.repository.name }}_server/pubspec.yaml | grep "version:" | cut -f 2 -d ":" | xargs)
           echo "APP_VERSION=$VER" >> $GITHUB_ENV
 
       - name: Extract metadata (tags, labels) for Docker
