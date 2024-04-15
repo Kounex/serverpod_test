@@ -26,13 +26,12 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: ./${{ github.repository }}_server
+        working-directory: ./${{ github.event.repository.name }}_server
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Create passwords file
-        working-directory: ${{ github.repository }}_server
         shell: bash
         env:
           SERVERPOD_PASSWORDS: ${{ secrets.SERVERPOD_PASSWORDS }}
@@ -57,7 +56,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_VENDOR }}/${{ env.IMAGE_NAME }}
           labels: |
             org.opencontainers.image.title=${{ env.IMAGE_NAME }}
             org.opencontainers.image.description=${{ env.IMAGE_DESCRIPTION }}
