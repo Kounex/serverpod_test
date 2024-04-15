@@ -26,13 +26,13 @@ jobs:
       packages: write
     defaults:
       run:
-        working-directory: ./projectname_server
+        working-directory: ./${{ github.repository }}_server
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Create passwords file
-        working-directory: projectname_server
+        working-directory: ${{ github.repository }}_server
         shell: bash
         env:
           SERVERPOD_PASSWORDS: ${{ secrets.SERVERPOD_PASSWORDS }}
@@ -50,7 +50,7 @@ jobs:
 
       - name: Set release version
         run: |
-          VER=$(cat ./serverpod_test_server/pubspec.yaml | grep "version:" | cut -f 2 -d ":" | xargs)
+          VER=$(cat ./${{ github.repository }}_server/pubspec.yaml | grep "version:" | cut -f 2 -d ":" | xargs)
           echo "APP_VERSION=$VER" >> $GITHUB_ENV
 
       - name: Extract metadata (tags, labels) for Docker
@@ -74,8 +74,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./serverpod_test_server
-          file: ./serverpod_test_server/Dockerfile
+          context: ./${{ github.repository }}_server
+          file: ./${{ github.repository }}_server/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
